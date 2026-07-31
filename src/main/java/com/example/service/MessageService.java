@@ -25,8 +25,8 @@ public class MessageService {
         if (message.getMessageText().length() > 255) {
             throw new InvalidMessageException("Message text cannot exceed 255 characters");
         }
-        if (!accountRepository.existsById(message.getPostedBy())) {
-            throw new InvalidMessageException("postedBy does not refer to an existing account");
+        if (message.getPostedBy() == null || !accountRepository.existsById(message.getPostedBy())) {
+            throw new InvalidMessageException("Account does not exist");
         }
         return messageRepository.save(message);
     }
