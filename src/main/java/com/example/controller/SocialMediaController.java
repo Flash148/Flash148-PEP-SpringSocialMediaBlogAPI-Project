@@ -50,8 +50,12 @@ public class SocialMediaController {
     }
 
     @PostMapping("/messages")
-    public Message createMessage(@RequestBody Message message) {
-        return messageService.createMessage(message);
+    public ResponseEntity<Message> createMessage(@RequestBody Message message) {
+        Message createdMessage = messageService.createMessage(message);
+        if (createdMessage != null) {
+            return ResponseEntity.ok(createdMessage);
+        }
+        return ResponseEntity.status(400).build();
     }
 
     @GetMapping("/messages")
@@ -105,7 +109,12 @@ public class SocialMediaController {
     }
 
     @ExceptionHandler(InvalidMessageException.class)
-    public ResponseEntity<?> handleInvalidMessage() {
+    public ResponseEntity<?> handleInvalidMessage(InvalidMessageException e) {
+        return ResponseEntity.status(400).build();
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException e) {
         return ResponseEntity.status(400).build();
     }
 } 
